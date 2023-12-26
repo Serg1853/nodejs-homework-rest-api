@@ -14,7 +14,6 @@ app.use(express.json());
 
 app.use("/api/contacts", contactsRouter);
 
-app.get(contactsRouter, (req, res) => res.json(contactsRouter));
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
 });
