@@ -1,7 +1,17 @@
 const express = require("express");
+const Joi = require("joi");
+
 const contacts = require("../../models/contacts.js");
-const router = express.Router();
+
 const { HttpError } = require("../../helpers");
+const router = express.Router();
+
+const addSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().required(),
+  phone: Joi.number().required(),
+});
+
 router.get("/", async (req, res, next) => {
   try {
     const result = await contacts.listContacts();
@@ -21,7 +31,7 @@ router.get("/:contactId", async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const result = await contacts.getContactById(contactId);
-    if (result) {
+    if (!result) {
       throw HttpError(404, "Not found");
     }
     res.json({
@@ -36,6 +46,9 @@ router.get("/:contactId", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
+    const { error } = addSchema.validate(req.body);
+    if (error) throw HttpError(400, error.message);
+
     const result = await contacts.addContact(req.body);
     res.status(201).json({
       status: "success",
@@ -57,11 +70,9 @@ router.delete("/:contactId", async (req, res, next) => {
 
 router.put("/:contactId", async (req, res, next) => {
   const { id } = req.params;
-  const { name, email, phone } = req.body;
-  const result = await contacts.updateContact(id, name, email, phone);
-  // const [contact] = tasks.filter((el) => el.id === id);
-  // task.title = title;
-  // task.text = text;
+  // const { name, email, phone } = req.body;
+  const result = await contacts.updateContact(id, req.body);
+
   res.json({
     status: "success",
     code: 200,

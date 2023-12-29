@@ -32,7 +32,7 @@ const addContact = async (data) => {
   return newContact;
 };
 
-const updateContact = async (id, name, email, phone) => {
+const updateContact = async (id, body) => {
   const contacts = await listContacts();
   const [contact] = contacts.filter((el) => el.id === id);
 
