@@ -17,6 +17,17 @@ const addSchema = Joi.object({
     "any.required": `Missing required phone field`,
   }),
 });
+const addSchemaPut = Joi.object({
+  name: Joi.string().messages({
+    "any.required": `Missing required name field`,
+  }),
+  email: Joi.string().messages({
+    "any.required": `Missing required email field`,
+  }),
+  phone: Joi.string().messages({
+    "any.required": `Missing required phone field`,
+  }),
+});
 
 router.get("/", async (req, res, next) => {
   try {
@@ -71,8 +82,8 @@ router.put("/:contactId", async (req, res, next) => {
     if (!body || Object.keys(body).length === 0) {
       return res.status(400).json({ message: "missing fields" });
     }
-    // const { error } = addSchema.validate(req.body);
-    // if (error) throw HttpError(400, error.message);
+    const { error } = addSchemaPut.validate(req.body);
+    if (error) throw HttpError(400, error.message);
 
     const { contactId } = req.params;
     const result = await contacts.updateContact(contactId, req.body);
