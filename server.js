@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
 
 const app = require("./app");
-
-const DB_HOST =
-  "mongodb+srv://Sergiy:6nelHYDI8gVV49t8@cluster0.8xk5pni.mongodb.net/db-contacts";
+const { DB_HOST } = require("./config");
 mongoose
   .connect(DB_HOST)
   .then(() => {
     app.listen(3000);
+    console.log("Database connection successful");
   })
   .catch((error) => {
     console.log(error.message);
