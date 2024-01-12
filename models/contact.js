@@ -51,7 +51,7 @@ const addSchemaPut = Joi.object({
 });
 
 const updateFavoriteSchemas = Joi.object({
-  favorite: Joi.boolean().required(),
+  favorite: Joi.boolean(),
 });
 
 const schemas = { addSchema, addSchemaPut, updateFavoriteSchemas };
