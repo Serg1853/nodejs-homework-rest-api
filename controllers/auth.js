@@ -21,15 +21,22 @@ const register = async (req, res) => {
   const newUser = await User.create({ ...req.body, password: hashPassword });
 
   res.status(201).json({
-    email: newUser.email,
-    name: newUser.name,
+    user: {
+      email: newUser.email,
+      subscription: newUser.subscription,
+    },
   });
 };
 
 const login = async (req, res) => {
   const { email, password } = req.body;
+
+  console.log("password", password);
+  if (!email || !password) {
+    throw HttpError(401, "Email or password is wrong");
+  }
   const user = await User.findOne({ email });
-  if (!email) {
+  if (!user) {
     throw HttpError(401, "Email or password is wrong");
   }
   const passwordCompare = await bcrypt.compare(password, user.password);
@@ -40,11 +47,20 @@ const login = async (req, res) => {
     id: user._id,
   };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
-  res.json({ token });
+  await User.findByIdAndUpdate(user._id, { token });
+  res.json({
+    token,
+    user: { email: user.email, subscription: user.subscription },
+  });
+};
+
+const getCurrent = async (req, res) => {
+  const { email, subscription } = req.user;
+  res.json({ email, subscription });
 };
 
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
+  getCurrent: ctrlWrapper(getCurrent),
 };
-
