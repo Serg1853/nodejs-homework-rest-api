@@ -53,6 +53,13 @@ const login = async (req, res) => {
     user: { email: user.email, subscription: user.subscription },
   });
 };
+const logout = async (req, res) => {
+  const { _id } = req.user;
+
+  await User.findByIdAndUpdate(_id, { token: null });
+
+  res.send("Status: 204 No Content");
+};
 
 const getCurrent = async (req, res) => {
   const { email, subscription } = req.user;
@@ -63,4 +70,5 @@ module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
+  logout: ctrlWrapper(logout),
 };
