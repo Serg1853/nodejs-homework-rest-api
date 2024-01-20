@@ -14,14 +14,14 @@ router.post(
   ctrl.register
 );
 
-router.post("/users/login", validateBody(schemas.loginSchema), ctrl.login);
+router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
 
-router.post("/users/logout", authenticate, ctrl.logout);
+router.post("/logout", authenticate, ctrl.logout);
 
-router.get("/users/current", authenticate, ctrl.getCurrent);
+router.get("/current", authenticate, ctrl.getCurrent);
 
 router.patch(
-  "/users",
+  "/",
   authenticate,
   validateBody(schemas.subscriptionListSchema),
   ctrl.updateSubscription

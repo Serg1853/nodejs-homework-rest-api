@@ -62,7 +62,7 @@ const logout = async (req, res) => {
 
   await User.findByIdAndUpdate(_id, { token: "" });
 
-  res.send("Status: 204 No Content");
+  res.status(204);
 };
 
 const getCurrent = async (req, res) => {
